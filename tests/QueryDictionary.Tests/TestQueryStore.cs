@@ -24,7 +24,7 @@ namespace QueryDictionary.Test
         [Fact]
         public void Load_GivenAStream_ReturnsQueryStore()
         {
-            using (FileStream s = new FileStream(@"queries.xml", FileMode.Open, FileAccess.Read, FileShare.Read))
+			using (FileStream s = new FileStream(@"Queries.xml", FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 var d = new QueryDictionaryXml() { Stream = s };
 
