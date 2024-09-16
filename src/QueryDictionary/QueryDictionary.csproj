@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>jghek</Authors>
     <Company>Qtopia NL</Company>
-    <Description>Loads SQL files from disk into a readonly immutable dictionary.</Description>
+    <Description>Loads query files from disk into a readonly immutable dictionary.</Description>
     <Copyright>(c) 2024 by J.G.Hek</Copyright>
     <PackageProjectUrl>https://github.com/jghek/QueryDictionary</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -12,6 +12,8 @@
     <RepositoryType>git</RepositoryType>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>data-collection.png</PackageIcon>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>QueryDictionary</Title>
   </PropertyGroup>
 
   <ItemGroup>
