@@ -37,7 +37,7 @@ namespace QueryDictionary.Test
 		[Fact]
 		public void Load_GivenAFilename_ReturnsQueryStoreWithValues()
 		{
-			var d = QueryDictionaryXml.ForFile(@"queries.xml");
+			var d = QueryDictionaryXml.ForFile(@"Queries.xml");
 
 			d.Count.Should().Be(6);
 			d.ContainsKey("Modify").Should().Be(true);
