@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/jghek/QueryDictionary</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIcon>middle-age.png</PackageIcon>
+    <PackageIcon>data-collection.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
