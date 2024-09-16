@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Queries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../Qtopia.Services/Data/QueryStore.xsd">
+	<Query Name="GetOneClient-int">
+      SELECT * FROM dbo.Client WHERE ClientId = @ClientId;
+    </Query>
+	<Query Name="GetOneClient-Guid">
+      SELECT * FROM dbo.Client WHERE ClientGuid = @ClientGuid;
+    </Query>
+	<Query Name="GetAllClient">
+      SELECT Name, ClientGuid, ClientId FROM dbo.Client;
+    </Query>
+	<Query Name="Create">
+      INSERT dbo.Client (ClientGuid, Name) VALUES (@ClientGuid, @Name); SELECT SCOPE_IDENTITY();
+    </Query>
+	<Query Name="Modify">
+      UPDATE dbo.Client SET Name = @Name WHERE ClientId = @ClientId;
+    </Query>
+	<Query Name="Delete-int">
+      DELETE dbo.Client WHERE ClientId = @ClientId;
+    </Query>
+</Queries>
