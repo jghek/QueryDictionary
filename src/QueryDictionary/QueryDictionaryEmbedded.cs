@@ -14,9 +14,9 @@ namespace QueryDictionary
 		public static QueryDictionaryEmbedded LoadAssemblyOfTypeWithSqlQueries<T>(
 			string extension = ".sql",
 			int levelsToInclude = 1,
-			string headerStartText = "-- START TEST CODE\r\n",
-			string headerEndText = "-- END TEST CODE\r\n",
-			string headerReplacementText = "\r\n",
+			string headerStartText = "-- START TEST CODE",
+			string headerEndText = "-- END TEST CODE",
+			string headerReplacementText = null,
 			Func<Query, bool> predicate = null,
 			Func<Query, Query> mutator = null) =>
 			LoadAssemblyOfType<T>(extension, levelsToInclude, headerStartText, headerEndText, headerReplacementText, predicate, mutator);
