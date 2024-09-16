@@ -14,7 +14,7 @@ namespace QueryDictionary.Test
         [Fact]
         public void Load_GivenAFilename_ReturnsQueryStore()
         {
-            var d = QueryDictionaryXml.ForFile(@"queries.xml");
+            var d = QueryDictionaryXml.ForFile(@"Queries.xml");
 
             d.Should().BeAssignableTo<QueryDictionary>();
             d.Should().BeAssignableTo<IQueryDictionary>();
