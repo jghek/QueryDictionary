@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>jghek</Authors>
     <Company>Qtopia NL</Company>
-    <Description>Loads query files from disk into a readonly immutable dictionary.</Description>
+    <Description>QueryDictionary is a library for managing and loading (SQL) queries from various sources such as embedded resources, folders, and XML files. It provides a convenient way to organize and access your (SQL) queries in a structured manner. Pairs well with Dapper.</Description>
     <Copyright>(c) 2024 by J.G.Hek</Copyright>
     <PackageProjectUrl>https://github.com/jghek/QueryDictionary</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
