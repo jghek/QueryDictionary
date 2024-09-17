@@ -16,12 +16,28 @@ namespace QueryDictionary
 		public Func<Query, Query> Mutator { get; set; }
 		public abstract void Load();
 		protected IDictionary<string, string> Queries { get; } = new Dictionary<string, string>();
+		internal object Lock { get; } = new object();
 
 		public IEnumerable<string> Keys => Queries.Keys;
 		public IEnumerable<string> Values => Queries.Values;
 		public int Count => Queries.Count;
 
-		public string this[string key] => Queries[key];
+		public string this[string key]
+		{
+			get
+			{
+				lock (Lock)
+				{
+					return Queries[key];
+				}
+			}
+		}
+
+		internal void AddRange(IEnumerable<Query> queries)
+		{
+			foreach (var query in queries)
+				Add(query);
+		}
 
 		internal void Add(Query query)
 		{
@@ -65,9 +81,36 @@ namespace QueryDictionary
 			return queryValue;
 		}
 
-		public bool ContainsKey(string key) => Queries.ContainsKey(key);
-		public bool TryGetValue(string key, out string value) => Queries.TryGetValue(key, out value);
-		public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => Queries.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Queries).GetEnumerator();
+		public bool ContainsKey(string key)
+		{
+			lock (Lock)
+			{
+				return Queries.ContainsKey(key);
+			}
+		}
+
+		public bool TryGetValue(string key, out string value)
+		{
+			lock (Lock)
+			{
+				return Queries.TryGetValue(key, out value);
+			}
+		}
+
+		public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+		{
+			lock (Lock)
+			{
+				return Queries.GetEnumerator();
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			lock (Lock)
+			{
+				return ((IEnumerable)Queries).GetEnumerator();
+			}
+		}
 	}
 }

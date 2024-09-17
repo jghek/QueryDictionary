@@ -9,34 +9,32 @@ namespace QueryDictionary
 	{
 		public Assembly Assembly { get; set; }
 		public string Extension { get; set; }
-		public int LevelsToInclude { get; set; }
+		public string NamespacePrefix { get; set; }
+		private object _lock = new object();
 
 		public static QueryDictionaryEmbedded LoadAssemblyOfTypeWithSqlQueries<T>(
+			string namespacePrefix = null,
 			string extension = ".sql",
-			int levelsToInclude = 1,
 			string headerStartText = "-- START TEST CODE",
 			string headerEndText = "-- END TEST CODE",
 			string headerReplacementText = null,
 			Func<Query, bool> predicate = null,
 			Func<Query, Query> mutator = null) =>
-			LoadAssemblyOfType<T>(extension, levelsToInclude, headerStartText, headerEndText, headerReplacementText, predicate, mutator);
+			LoadAssemblyOfType<T>(namespacePrefix, extension, headerStartText, headerEndText, headerReplacementText, predicate, mutator);
 
 		public static QueryDictionaryEmbedded LoadAssemblyOfType<T>(
+			string namespacePrefix = null,
 			string extension = null,
-			int levelsToInclude = 1,
 			string headerStartText = null,
 			string headerEndText = null,
 			string headerReplacementText = null,
 			Func<Query, bool> predicate = null,
 			Func<Query, Query> mutator = null)
 		{
-			if (levelsToInclude < 1)
-				throw new ArgumentOutOfRangeException(nameof(levelsToInclude), "Levels to include must be greater than 0.");
-
 			var q = new QueryDictionaryEmbedded()
 			{
 				Assembly = typeof(T).Assembly,
-				LevelsToInclude = levelsToInclude,
+				NamespacePrefix = namespacePrefix,
 				Extension = extension,
 				HeaderReplacement = headerReplacementText ?? string.Empty,
 				HeaderStartText = headerStartText,
@@ -52,27 +50,19 @@ namespace QueryDictionary
 
 		public override void Load()
 		{
-			Queries.Clear();
+			int start = NamespacePrefix?.Length ?? 0;
+			int end = Extension?.Length ?? 0;
 
-			var queries = Assembly.GetManifestResourceNames()
-				.Where(o => Extension is null || o.EndsWith(Extension))
-				.Select(o => new Query(o, getKey(o), getManifest(o)));
+			lock (_lock)
+			{
+				Queries.Clear();
 
-			foreach (var query in queries)
-				Add(query);
-		}
+				var queries = Assembly.GetManifestResourceNames()
+					.Where(o => (Extension is null || o.EndsWith(Extension)) && (NamespacePrefix is null || o.StartsWith(NamespacePrefix)))
+					.Select(o => new Query(o, o.Substring(start, o.Length - start - end), getManifest(o)));
 
-		private string getKey(string resourceName)
-		{
-			var parts = resourceName.Split('.');
-
-			if (parts.Length < 2)
-				throw new IndexOutOfRangeException("Resource name should contain at least 3 parts.");
-
-			int l = LevelsToInclude + 2 > parts.Length ? parts.Length - 2 : LevelsToInclude;
-
-			var name = string.Join(".", parts.Skip(parts.Length - l - 1).Take(l));
-			return name;
+				AddRange(queries);
+			}
 		}
 
 		private string getManifest(string name)

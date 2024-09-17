@@ -7,6 +7,7 @@ namespace QueryDictionary
 	{
 		public string FolderName { get; set; }
 		public string SearchPattern { get; set; }
+		private object _lock = new object();
 
 		public static QueryDictionaryFolder LoadSqlServerQueryFolder(string folderName)
 		{
@@ -26,10 +27,13 @@ namespace QueryDictionary
 
 		public override void Load()
 		{
-			Queries.Clear();
+            lock (_lock)
+            {
+				Queries.Clear();
 
-			foreach (string fileName in Directory.EnumerateFiles(FolderName, SearchPattern, SearchOption.AllDirectories))
-				Add(new Query(fileName, Path.GetFileNameWithoutExtension(fileName), File.ReadAllText(fileName)));
+				foreach (string fileName in Directory.EnumerateFiles(FolderName, SearchPattern, SearchOption.AllDirectories))
+					Add(new Query(fileName, Path.GetFileNameWithoutExtension(fileName), File.ReadAllText(fileName)));
+            }
 		}
 	}
 }

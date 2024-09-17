@@ -26,15 +26,18 @@ namespace QueryDictionary
 
 		public override void Load()
 		{
-			Queries.Clear();
-			var doc = XDocument.Load(Stream);
-			var elements = doc.XPathSelectElements(XPathQuery);
-
-			foreach (XElement e in elements)
+			lock (Lock)
 			{
-				var name = getXPathResult(e, XPathNameSubQuery);
-				var value = getXPathResult(e, XPathValueSubQuery);
-				Add(new Query(name, name, value));
+				Queries.Clear();
+				var doc = XDocument.Load(Stream);
+				var elements = doc.XPathSelectElements(XPathQuery);
+
+				foreach (XElement e in elements)
+				{
+					var name = getXPathResult(e, XPathNameSubQuery);
+					var value = getXPathResult(e, XPathValueSubQuery);
+					Add(new Query(name, name, value));
+				}
 			}
 		}
 

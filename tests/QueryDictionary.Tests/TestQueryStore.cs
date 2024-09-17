@@ -58,12 +58,12 @@ namespace QueryDictionary.Test
 		[Fact]
 		public void LoadEmbeddedFolder_GivenNothing_ReturnsQueryStoreWithValues()
 		{
-			var d = QueryDictionaryEmbedded.LoadAssemblyOfType<TestQueryStore>(".sql");
+			var d = QueryDictionaryEmbedded.LoadAssemblyOfType<TestQueryStore>("QueryDictionary.Test.", ".sql");
 
 			d.Count.Should().Be(3);
-			d.Should().ContainKey("Template");
-			d.Should().ContainKey("Template1");
-			d.Should().ContainKey("Template2");
+			d.Should().ContainKey("Embedded.Template");
+			d.Should().ContainKey("Embedded2.Template1");
+			d.Should().ContainKey("Embedded2.Template2");
 		}
 
 		[Fact]
@@ -71,7 +71,7 @@ namespace QueryDictionary.Test
 		{
 			var d = QueryDictionaryEmbedded.LoadAssemblyOfType<TestQueryStore>(
 				extension: ".sql",
-				levelsToInclude: 2
+				namespacePrefix: "QueryDictionary.Test."
 			);
 
 			d.Count.Should().Be(3);
@@ -89,7 +89,7 @@ namespace QueryDictionary.Test
 		public void LoadEmbeddedFolder_WithHeaderFilter_ReturnsQueryStoreWithValues()
 		{
 			var d = QueryDictionaryEmbedded.LoadAssemblyOfTypeWithSqlQueries<TestQueryStore>(
-				levelsToInclude: 2
+				namespacePrefix: "QueryDictionary.Test."
 			);
 
 			d.Count.Should().Be(3);
@@ -108,7 +108,7 @@ namespace QueryDictionary.Test
 		{
 			var d = QueryDictionaryEmbedded.LoadAssemblyOfType<TestQueryStore>(
 				extension: ".sql",
-				predicate: q => q.RawKey.StartsWith($"QueryDictionary.Test.Embedded2")
+				namespacePrefix: "QueryDictionary.Test.Embedded2."
 			);
 
 			d.Count.Should().Be(2);
@@ -121,12 +121,12 @@ namespace QueryDictionary.Test
 		{
 			var d = QueryDictionaryEmbedded.LoadAssemblyOfType<TestQueryStore>(
 				extension: ".sql",
-				levelsToInclude: 2,
-				predicate: q => q.RawKey.StartsWith($"QueryDictionary.Test.Embedded2"),
+				namespacePrefix: "QueryDictionary.Test.",
 				mutator: q => new Query(q.RawKey, q.Key.Replace(".", "/"), q.Value)
 			);
 
-			d.Count.Should().Be(2);
+			d.Count.Should().Be(3);
+			d.Should().ContainKey("Embedded/Template");
 			d.Should().ContainKey("Embedded2/Template1");
 			d.Should().ContainKey("Embedded2/Template2");
 		}

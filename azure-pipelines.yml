@@ -10,7 +10,7 @@ variables:
   PatchStart: 0
   ${{ if eq( variables['Build.SourceBranchName'], 'main' ) }}:
     Major: '2'
-    Minor: '0'
+    Minor: '1'
     Patch: $[counter(format('{0}.{1}', variables['Major'], variables['Minor']), variables['PatchStart'])]
     PackageVersion: $(Major).$(Minor).$(Patch)
 
